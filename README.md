@@ -31,6 +31,7 @@ fastAPI/
 │   └── test.py          # Script chạy nhanh Uvicorn server ở port 5000
 │
 ├── .env                 # File lưu trữ biến môi trường bảo mật (Chỉ lưu cục bộ)
+├── .env.example         # File cấu hình mẫu làm ví dụ
 ├── .gitignore           # Cấu hình bỏ qua khi push git lên GitHub
 └── README.md            # Tài liệu hướng dẫn sử dụng dự án
 ```
@@ -39,13 +40,7 @@ fastAPI/
 
 ## ⚙️ Hướng Dẫn Cài Đặt
 
-### 1. Nhân bản dự án (Clone)
-```bash
-git clone https://github.com/truongkiet545787/fastapi-development.git
-cd fastapi-development
-```
-
-### 2. Kích hoạt môi trường ảo (Virtual Environment)
+### 1. Kích hoạt môi trường ảo (Virtual Environment)
 * **Windows (PowerShell):**
   ```powershell
   .\venv\Scripts\Activate.ps1
@@ -55,13 +50,17 @@ cd fastapi-development
   source venv/bin/activate
   ```
 
-### 3. Cài đặt các thư viện cần thiết
+### 2. Cài đặt các thư viện cần thiết
 ```bash
 pip install fastapi uvicorn psycopg2-binary sqlalchemy pydantic-settings python-dotenv
 ```
 
-### 4. Tạo file cấu hình cơ sở dữ liệu `.env`
-Tạo một file tên `.env` ở thư mục gốc của dự án và điền thông số kết nối PostgreSQL của bạn:
+### 3. Cấu hình biến môi trường (`.env`)
+Tạo một file tên `.env` ở thư mục gốc của dự án bằng cách sao chép từ file `.env.example` và điền mật khẩu PostgreSQL của bạn:
+```bash
+cp .env.example .env
+```
+Nội dung file `.env` cần thiết lập:
 ```env
 DATABASE_HOSTNAME=localhost
 DATABASE_PORT=5432
