@@ -93,4 +93,8 @@ Bạn có thể truy cập tài liệu API tự động sinh bởi FastAPI (Swag
 | **GET** | `/post/{id}` | Lấy chi tiết bài viết theo ID | SQLAlchemy ORM |
 | **DELETE** | `/post/{id}` | Xóa một bài viết theo ID | SQLAlchemy ORM |
 | **PUT** | `/post/{id}` | Cập nhật bài viết theo ID (Chỉ trường gửi lên) | SQLAlchemy ORM |
-| **GET** | `/sqlalchema` | Lấy danh sách tất cả bài viết | SQLAlchemy ORM |
+| **GET** | `/sqlalchemy` | Lấy danh sách tất cả bài viết | SQLAlchemy ORM |
+| **POST** | `/createuser` | Tạo mới một người dùng | SQLAlchemy ORM |
+| **GET** | `/getuser/{id}` | Lấy chi tiết người dùng theo ID | SQLAlchemy ORM |
+| **GET** | `/allUser` | Lấy danh sách tất cả người dùng | SQLAlchemy ORM |
+| **POST** | `/login` | Đăng nhập hệ thống | SQLAlchemy ORM + JWT |
