@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from .config import settings
 from . import schemas
 from .utils import hash_password, pwd_context
-from .routers import posts,users,authentication
+from .routers import posts,users,authentication,votes
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -46,7 +46,8 @@ while True:
 app.include_router(posts.router)
 app.include_router(users.router)
 app.include_router(authentication.router)
+app.include_router(votes.router)
 
 
 
-
+ 
