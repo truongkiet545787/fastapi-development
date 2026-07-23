@@ -98,3 +98,39 @@ Bạn có thể truy cập tài liệu API tự động sinh bởi FastAPI (Swag
 | **GET** | `/getuser/{id}` | Lấy chi tiết người dùng theo ID | SQLAlchemy ORM |
 | **GET** | `/allUser` | Lấy danh sách tất cả người dùng | SQLAlchemy ORM |
 | **POST** | `/login` | Đăng nhập hệ thống | SQLAlchemy ORM + JWT |
+
+---
+
+## 🌐 Triển Khai Thực Tế (Production Deployment Setup)
+
+Dự án đã được cấu hình triển khai thực tế trên môi trường Linux (WSL Ubuntu) kết hợp giữa **Gunicorn**, **Nginx** và **DuckDNS**. Dưới đây là mô tả chi tiết các thành phần cấu hình:
+
+### 1. Đồng bộ hóa Mật khẩu PostgreSQL
+- **Mục đích:** Đồng bộ thông tin truy cập cơ sở dữ liệu trên cả Windows và Linux.
+- **Thực hiện:**
+  - Cập nhật mật khẩu Linux user `postgres` và database user `postgres` thành `123456789`.
+  - Cấu hình file `.env` trỏ về `127.0.0.1` để ứng dụng kết nối trực tiếp với PostgreSQL chạy trong WSL.
+
+### 2. Chạy ngầm Ứng dụng bằng Gunicorn & Systemd
+- **Mục đích:** Chạy ngầm FastAPI vĩnh viễn dưới nền và tự động khởi động cùng hệ thống khi bật máy ảo mà không cần mở Terminal thủ công.
+- **Tệp cấu hình:** [gunicorn.service](file:///c:/Users/nhung/Downloads/fastAPI/gunicorn.service) (đã được lưu trong thư mục gốc dự án và liên kết vào hệ thống tại `/etc/systemd/system/gunicorn.service`).
+- **Lệnh quản lý:**
+  - Khởi động: `sudo systemctl start gunicorn`
+  - Dừng: `sudo systemctl stop gunicorn`
+  - Khởi động lại (khi cập nhật code): `sudo systemctl restart gunicorn`
+  - Xem trạng thái: `sudo systemctl status gunicorn`
+
+### 3. Cấu hình Nginx làm Reverse Proxy
+- **Mục đích:** Nginx lắng nghe ở cổng mặc định `80`, nhận yêu cầu từ trình duyệt ngoài và chuyển tiếp vào Gunicorn (cổng `8000`). Giúp người dùng không cần gõ số cổng `:8000` trên trình duyệt và tăng tính bảo mật, hiệu năng phục vụ.
+- **Tệp cấu hình hệ thống:** `/etc/nginx/sites-available/default`
+- **Lệnh quản lý:**
+  - Kiểm tra cú pháp: `sudo nginx -t`
+  - Khởi động lại: `sudo systemctl restart nginx`
+
+### 4. Tên miền phụ miễn phí qua DuckDNS
+- **Mục đích:** Thay thế địa chỉ IP thô bằng tên miền dễ nhớ, hỗ trợ cấu hình HTTPS sau này.
+- **Tên miền phụ:** `truongkietfastapi.duckdns.org` (đã được trỏ về IP của máy Linux `172.23.202.173`).
+- **Cách truy cập:**
+  - Trang tài liệu API: `http://truongkietfastapi.duckdns.org/docs`
+  - Trang chủ: `http://truongkietfastapi.duckdns.org`
+
