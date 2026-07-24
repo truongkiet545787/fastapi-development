@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # 1. Cơ sở dữ liệu PostgreSQL (Production)
+  db:
+    image: postgres:16-alpine
+    container_name: fastapi-db-prod
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}       # Đọc từ file .env hoặc biến môi trường hệ thống
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}   # Đọc từ file .env hoặc biến môi trường hệ thống
+      POSTGRES_DB: ${DATABASE_NAME}             # Đọc từ file .env hoặc biến môi trường hệ thống
+    # Cổng 5432 không được ánh xạ ra ngoài (ports) để bảo mật, tránh bị quét từ Internet
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    restart: always
+
+  # 2. Ứng dụng FastAPI (Production)
+  api:
+    build: .
+    container_name: fastapi-app-prod
+    ports:
+      - "${APP_PORT:-8000}:8000" # Ánh xạ cổng động, mặc định là 8000 nếu không cấu hình APP_PORT
+    environment:
+      DATABASE_HOSTNAME: db # Kết nối nội bộ an toàn qua mạng Docker tới container "db"
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+    # Loại bỏ "volumes" đồng bộ code nóng để đảm bảo tính đóng gói bất biến trong production
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  postgres_data_prod:
