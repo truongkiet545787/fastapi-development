@@ -16,7 +16,7 @@ services:
 
   # 2. Ứng dụng FastAPI (Production)
   api:
-    build: .
+    image: ${DOCKER_IMAGE:-yourusername/fastapi-api:latest} # Kéo ảnh pre-built từ Docker Hub hoặc Registry
     container_name: fastapi-app-prod
     ports:
       - "${APP_PORT:-8000}:8000" # Ánh xạ cổng động, mặc định là 8000 nếu không cấu hình APP_PORT
